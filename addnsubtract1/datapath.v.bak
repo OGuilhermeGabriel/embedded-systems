@@ -1,0 +1,25 @@
+module datapath (
+    input clk, input rst, input ld, input clr, input s, output CM,
+    output Cm
+);
+    reg [15:0] C;
+    // Intermediate signals
+    wire [15:0] C_plus_1, C_minus_1, C_next;
+
+    // Instantiating the combinational blocks for the datapath
+    fulladder16     adder (.A(C), .B(16'h0001), .S(C_plus_1));
+    subtractor16    subtr (.A(C), .B(16'h0001), .S(C_minus_1));
+    mux2x1_16       mux   (.in0(C_plus_1), .in1(C_minus_1), .s(s), .out(C_next));
+    comparator_CM   cmpM  (.C(C), .CM(CM));
+    comparator_Cm   cmpm  (.C(C), .Cm(Cm));
+
+    // State register for C (sequential logic)
+    always @(posedge clk or posedge rst) begin
+        if (rst)
+            C <= 16'h0000;
+        else if (clr)
+            C <= 16'h0000;
+        else if (ld)
+            C <= C_next;
+    end
+endmodule

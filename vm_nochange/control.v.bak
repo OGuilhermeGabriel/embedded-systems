@@ -1,0 +1,57 @@
+module control (
+    input wire clk,
+    input wire rst,
+    input wire c,   // moeda foi depositada
+    input wire h,   // status do datapath (tot >= s)
+    output reg ld,  // comando para somar moeda
+    output reg clr, // comando para zerar tot
+    output reg d    // libera item
+);
+
+    // Codificação de estados (FSM)
+    typedef enum logic [1:0] {
+        INIT  = 2'b00,
+        WAIT  = 2'b01,
+        ADD   = 2'b10,
+        PRINT = 2'b11
+    } state_t;
+
+    state_t state, next;
+
+    // Transição de estados
+    always @(posedge clk or posedge rst) begin
+        if (rst)
+            state <= INIT;
+        else
+            state <= next;
+    end
+
+    // Lógica combinacional para próxima transição
+    always @(*) begin
+        next = state;
+        ld = 0;
+        clr = 0;
+        d = 0;
+        case (state)
+            INIT: begin
+                clr = 1;
+                next = WAIT;
+            end
+            WAIT: begin
+                if (c)  // moeda inserida
+                    next = ADD;
+            end
+            ADD: begin
+                ld = 1;
+                if (h)
+                    next = PRINT;
+                else
+                    next = WAIT;
+            end
+            PRINT: begin
+                d = 1;  // libera produto
+                next = INIT;
+            end
+        endcase
+    end
+endmodule

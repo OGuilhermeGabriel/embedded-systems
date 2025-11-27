@@ -1,0 +1,67 @@
+module fsm_xyz2(
+    input clk, input rst, input I output reg [2:0] xyz
+)
+    //Mapping states
+    parameter s0 = 2'b00;
+    parameter s1 = 2'b01;
+    parameter s2 = 2'b10;
+    parameter s3 = 2'b11;
+
+    //States Variables 
+    reg [1:0] currState;
+    reg [1:0] nextState; 
+
+    //States Register (REG -> Sequential Logic) 
+    always @(posedge clk, posedge rst) begin
+        if (rst == 1'b1) begin
+            currState <= s0; 
+        end else begin
+            currState <= nextState;
+        end
+    end 
+
+    //Next State Logic (COMB -> Combinational Logic)
+    always @(*) begin
+        nextState = currState; 
+        case(currState)
+            s0: begin
+                if (I == 1b'1)begin
+                    nextState = s0; 
+                end else if (I == 1b'0) begin 
+                    nextState = s1; 
+                end
+            end
+            s1: begin
+                if (I == 1b'1)begin
+                    nextState = s1; 
+                end else if (I == 1b'0) begin 
+                    nextState = s2;
+                end
+            end
+            s2: begin
+                if (I == 1b'1)begin
+                    nextState = s2; 
+                end else if (I == 1b'0) begin 
+                    nextState = s3;
+                end
+            end
+            s3: begin
+                if (I == 1b'1)begin
+                    nextState = s3; 
+                end else if (I == 1b'0) begin 
+                    nextState = s0;
+                end
+            end
+        endcase 
+    end
+
+    // Output Logic
+    always (*) begin
+        case(currState)
+            s0: xyz = 3b'000;
+            s1: xyz = 3b'001;
+            s2: xyz = 3b'010;
+            s3: xyz = 3b'100;
+        endcase
+    end
+endmodule

@@ -1,0 +1,58 @@
+module fsm_abcd(
+    input inputA, input clk, input rst, output reg y
+);
+    //Mapping states 
+    parameter A = 2'b00;
+    parameter B = 2'b01;
+    parameter C = 2'b10;
+    parameter D = 2'b11;
+
+    //States Variables
+    reg [1:0] currState;
+    reg [1:0] nextState;
+
+    //State Register (REG -> Sequential Logic)
+    always @(posedge clk, posedge rst) begin
+        if (!rst) begin 
+            currState <= A; 
+        end else begin
+            currState <= nextState;
+        end
+    end
+
+    //Next State Logic (COMB -> Sequential Logic)
+    always @(*) begin
+        case(currState)
+            A:begin
+                if(inputA == 1'b0) begin 
+                    nextState = A;
+                end else if (inputA == 1'b1) begin
+                    nextState = B;
+                end 
+            end
+            B:begin
+                if(inputA == 1'b0) begin 
+                    nextState = C;
+                end else if (inputA == 1'b1) begin
+                    nextState = B;
+                end 
+            end 
+            C:begin
+                nextState = D;
+            end
+            D:begin
+                nextState = A;
+            end
+        endcase
+    end 
+
+    //Output logic 
+    always @(*)begin
+        case (currState)
+            A: y = 1'b0;
+            B: y = 1'b1;
+            C: y = 1'b1;
+            D: y = 1'b0;
+        endcase
+    end
+endmodule 

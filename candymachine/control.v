@@ -1,0 +1,72 @@
+module control (
+  input wire clk, input wire rst, input wire cmp_ge80, input wire [1:0] sel,
+  output reg ld, output reg clr, output reg op, output reg R
+);
+
+	// Codificação de estados (FSM)
+	parameter INIT    = 3'b000,
+				WAIT    = 3'b001,
+				ADD1    = 3'b010,
+				ADD2    = 3'b011,
+				ADD3    = 3'b100,
+				RELEASE = 3'b101,
+				DEC     = 3'b110;
+
+	reg [2:0] state, next_state;
+
+  // Lógica sequencial
+  always @(posedge clk or posedge rst) begin
+    if (rst)
+      state <= INIT;
+    else
+      state <= next_state;
+  end
+
+  // Lógica combinacional
+  always @(*) begin
+    // valores padrão
+    next_state = state;
+    ld = 0;
+    clr = 0;
+    op = 1; // soma
+    R = 0;
+
+    case (state)
+      INIT: begin
+        clr = 1;
+        next_state = WAIT;
+      end
+
+      WAIT: begin
+        if (cmp_ge80)
+          next_state = RELEASE;
+        else begin
+          case (sel)
+            2'b01: next_state = ADD1;
+            2'b10: next_state = ADD2;
+            2'b11: next_state = ADD3;
+            default: next_state = WAIT;
+          endcase
+        end
+      end
+
+      ADD1, ADD2, ADD3: begin
+        ld = 1;
+        op = 1; // soma
+        next_state = WAIT;
+      end
+
+      RELEASE: begin
+        R = 1;
+        next_state = DEC;
+      end
+
+      DEC: begin
+        ld = 1;
+        op = 0; // subtrai 0.80
+        next_state = WAIT;
+      end
+      default: next_state = INIT;
+    endcase
+  end
+endmodule
