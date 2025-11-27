@@ -1,7 +1,9 @@
 # Embedded-systems
 This is a repository dedicated to my projects in the Embedded Digital Systems course. It includes some projects I completed during the course.
 
-In these projects, I described the hardware using Verilog and synthesized it using Altera Quartus software. The boards I used varied from project to project. Some development boards I used as FPGAs and CPLDs were: Cyclone® IV EP4CE115 and Altera MAX II EPM240.
+In these projects, I described the hardware using Verilog and synthesized it using Altera Quartus software. The boards I used varied from project to project. Some development boards I used as FPGAs and CPLDs were: Cyclone® IV EP4CE115, Altera MAX II EPM240 and GW1NZ-1 Tang-Nano1K.
+
+- Disclaimer: Some projects may be outdated or abandoned. Those described as `[COMPLETED]` mean they have been finalized.
 
 ## 4-bit Comparator [COMPLETED]
 
@@ -13,4 +15,8 @@ A basic finite state machine was created with eight states: these are represente
 
 ## Tangnano Examples 
 
-Simple examples of Verilog and RTL projects using a Tangnano1k mini FPGA board.  
+Simple examples of Verilog and RTL projects using a Tangnano1k mini FPGA board.  The `[COMPLETED]` projects are:
+
+- Breadboard Blinked LED 
+- Inner Blinked LED
+- Perceptron
