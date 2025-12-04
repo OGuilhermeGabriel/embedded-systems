@@ -20,3 +20,7 @@ Simple examples of Verilog and RTL projects using a Tangnano1k mini FPGA board. 
 - Breadboard Blinked LED 
 - Inner Blinked LED
 - Perceptron
+
+## Micro controller Examples 
+
+Simple examples of working with micro-controllers like Arduino ATmega328p
