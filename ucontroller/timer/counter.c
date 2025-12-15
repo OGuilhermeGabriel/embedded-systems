@@ -3,7 +3,7 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 
-volatile uint16_t ovf_count = 0;
+volatile uint16_t ovf_count = 0; //cont::ador de overflow
 volatile uint8_t state = 0; //states para pb5 = high e pb5 = low  
 
 ISR(TIMER0_OVF_vect) {
@@ -16,7 +16,7 @@ ISR(TIMER0_OVF_vect) {
             ovf_count = 0;           // zera contagem
           }
     }else{//Led aceso: espera 4s 
-          if(ovf_count >= 244){   //
+          if(ovf_count >= 244){  
             PORTB &= ~(1<<PB5);
             state = 0; 
             ovf_count = 0; 
@@ -34,7 +34,7 @@ int main() {
     state = 0; 
     ovf_count = 0; 
 
-    TCCR0A = 0b00000000; //sem preeescale se quiser mudar eu  adiciono bits
+    TCCR0A = 0b00000000; 
     TCCR0B |= (1<<CS02)|(1<<CS00); //prescaler de 1024
     TCNT0 = 0; //zerando o contador 
     TIMSK0 |=  (1<<TOIE0); // habilitando a interrupção quando ocorre o estouro do contador
